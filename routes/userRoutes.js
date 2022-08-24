@@ -7,5 +7,6 @@ const {
 
 router.post("/login", loginUser);
 router.post("/signup", signupUser);
+//maybe another route for other profiles
 
 module.exports = router;
