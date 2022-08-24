@@ -2,7 +2,7 @@ const router = require("express").Router();
 const {
      loginUser,
      signupUser,
-     getProfile,
+     // getProfile,
 } = require("../controllers/userControllers");
 
 router.post("/login", loginUser);
