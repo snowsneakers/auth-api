@@ -2,7 +2,10 @@ const Entry = require("../models/entryModel");
 
 const getEntries = async (req, res) => {
      try {
-          const entry = await Entry.find({ user_id: req.user.id });
+          //filter entries by user that posted (for like profile maybe)
+          // const entry = await Entry.find({ user_username: req.user.username });
+          //gets all entries with creator attached
+          const entry = await Entry.find({}).sort({ createdAt: -1 });
           res.status(200).json(entry);
      } catch (error) {
           res.status(400).json({ error: error.message });
@@ -25,9 +28,9 @@ const createEntry = async (req, res) => {
      try {
           const entry = await Entry.create({
                text: req.body.text,
-               user_id: req.user.id,
+               user_username: req.user.username,
           });
-          res.status(200).json(req.body.text);
+          res.status(200).json(entry);
      } catch (error) {
           res.status(400).json({ error: error.message });
      }
@@ -55,7 +58,7 @@ const deleteEntry = async (req, res) => {
                throw Error("Entry not found");
           }
           const deletedEntry = await Entry.findByIdAndDelete(req.params.id);
-          res.status(200).json({ message: `deleted ${req.params.id}` });
+          res.status(200).json(deletedEntry);
      } catch (error) {
           res.status(400).json({ error: error.message });
      }
