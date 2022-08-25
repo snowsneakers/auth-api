@@ -7,12 +7,30 @@ const generateToken = (username) => {
 };
 
 const signupUser = async (req, res) => {
-     const { username, password, orderDate, trim, exterior, wheels, interior, fsd, location } = req.body;
+     const {
+          username,
+          password,
+          orderDate,
+          trim,
+          exterior,
+          wheels,
+          interior,
+          location,
+     } = req.body;
      try {
-          const user = await User.signup(username, password, orderDate, trim, exterior, wheels, interior, fsd, location);
+          const user = await User.signup(
+               username,
+               password,
+               orderDate,
+               trim,
+               exterior,
+               wheels,
+               interior,
+               location
+          );
           // const token = generateToken(user._id);
           const token = generateToken(user.username);
-          res.status(201).json({ username, token, orderDate, trim, exterior, wheels, interior, fsd, location });
+          res.status(201).json({ user, token });
      } catch (error) {
           res.status(400).json({ error: error.message });
      }
@@ -24,23 +42,27 @@ const loginUser = async (req, res) => {
           const user = await User.login(username, password);
           // const token = generateToken(user._id);
           const token = generateToken(user.username);
-          res.status(200).json({ username, token });
+          res.status(200).json({ user, token });
      } catch (error) {
           res.status(400).json({ error: error.message });
      }
 };
 
-// const getProfile = async (req, res) => {
-//      try {
-//           const user = await User.find({ username: req.user.username });
-//           res.status(200).json(user);
-//      } catch (error) {
-//           res.status(400).json({ error: error.message });
-//      }
-// };
+const getProfile = async (req, res) => {
+     try {
+          const user = await User.findOne({ username: req.params.username });
+          if (!user) {
+               res.status(400);
+               throw Error("User not found");
+          }
+          res.status(200).json(user);
+     } catch (error) {
+          res.status(400).json({ error: error.message });
+     }
+};
 
 module.exports = {
      loginUser,
      signupUser,
-     // getProfile,
+     getProfile,
 };
