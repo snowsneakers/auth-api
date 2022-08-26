@@ -15,6 +15,7 @@ const signupUser = async (req, res) => {
           exterior,
           wheels,
           interior,
+          fsd,
           location,
      } = req.body;
      try {
@@ -26,6 +27,7 @@ const signupUser = async (req, res) => {
                exterior,
                wheels,
                interior,
+               fsd,
                location
           );
           // const token = generateToken(user._id);
@@ -61,8 +63,25 @@ const getProfile = async (req, res) => {
      }
 };
 
+const updatePic = async (req, res) => {
+     try {
+          const user = await User.findOne({ username: req.user.username });
+          if (!user) {
+               throw Error("User not found");
+          }
+          updatedUser = await User.findByIdAndUpdate(
+               { username: req.user.username },
+               { profilePic: req.body.profilePic }
+          );
+          res.status(200).json(user);
+     } catch (error) {
+          res.status(400).json({ error: error.message });
+     }
+};
+
 module.exports = {
      loginUser,
      signupUser,
      getProfile,
+     updatePic,
 };

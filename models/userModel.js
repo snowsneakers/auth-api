@@ -16,7 +16,7 @@ const userSchema = new mongoose.Schema(
           exterior: { type: String, required: true },
           wheels: { type: String, required: true },
           interior: { type: String, required: true },
-          // fsd: {type: Boolean, required: true},
+          fsd: { type: String, required: true },
           location: { type: String, default: "N/A" },
      },
      { timestamps: true }
@@ -30,6 +30,7 @@ userSchema.statics.signup = async function (
      exterior,
      wheels,
      interior,
+     fsd,
      location
 ) {
      if (!username || !password || !orderDate) {
@@ -55,6 +56,7 @@ userSchema.statics.signup = async function (
           exterior,
           wheels,
           interior,
+          fsd,
           location,
      });
      return user;
