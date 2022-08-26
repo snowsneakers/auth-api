@@ -27,6 +27,8 @@ const getSoloEntry = async (req, res) => {
 const createEntry = async (req, res) => {
      try {
           const entry = await Entry.create({
+               start: req.body.start,
+               end: req.body.end,
                text: req.body.text,
                user_username: req.user.username,
           });
@@ -64,10 +66,33 @@ const deleteEntry = async (req, res) => {
      }
 };
 
+const updateLikes = async (req, res) => {
+     try {
+          const entry = await Entry.findById(req.params.id);
+          if (!entry) {
+               res.status(404);
+               throw Error("Entry not found");
+          }
+          const updatedEntry = await Entry.findByIdAndUpdate(req.params.id, {
+               $push: { likes: req.user.username },
+          });
+          if (updatedEntry.likes.includes(req.user.username)) {
+               await Entry.findByIdAndUpdate(req.params.id, {
+                    $pull: { likes: req.user.username },
+               });
+          }
+
+          res.status(200).json({ message: `liked ${req.params.id}` });
+     } catch (error) {
+          res.status(400).json({ error: error.message });
+     }
+};
+
 module.exports = {
      getEntries,
      getSoloEntry,
      createEntry,
      deleteEntry,
      updateEntry,
+     updateLikes,
 };

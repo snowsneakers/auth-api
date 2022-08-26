@@ -6,6 +6,7 @@ const {
      createEntry,
      deleteEntry,
      updateEntry,
+     updateLikes,
 } = require("../controllers/entryControllers");
 
 router.use(protect);
@@ -14,5 +15,6 @@ router.get("/:id", getSoloEntry);
 router.post("/", createEntry);
 router.put("/:id", updateEntry);
 router.delete("/:id", deleteEntry);
+router.put("/:id/likes", updateLikes);
 
 module.exports = router;
