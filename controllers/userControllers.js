@@ -1,9 +1,9 @@
 const User = require("../models/userModel");
 const jwt = require("jsonwebtoken");
 
-const generateToken = (username) => {
+const generateToken = (_id) => {
      // return jwt.sign({ _id }, process.env.SECRET, { expiresIn: "3d" });
-     return jwt.sign({ username }, process.env.SECRET, { expiresIn: "3d" });
+     return jwt.sign({ _id }, process.env.SECRET, { expiresIn: "3d" });
 };
 
 const signupUser = async (req, res) => {
@@ -52,7 +52,7 @@ const loginUser = async (req, res) => {
 
 const getProfile = async (req, res) => {
      try {
-          const user = await User.findOne({ username: req.params.username });
+          const user = await User.findOne({ username: req.params.username }).select("-password");
           if (!user) {
                res.status(400);
                throw Error("User not found");
