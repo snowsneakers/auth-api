@@ -31,7 +31,8 @@ userSchema.statics.signup = async function (
      wheels,
      interior,
      fsd,
-     location
+     location,
+     profilePicture
 ) {
      if (!username || !password || !orderDate) {
           throw Error("All fields must be filled");
@@ -58,6 +59,7 @@ userSchema.statics.signup = async function (
           interior,
           fsd,
           location,
+          profilePicture: "https://i.stack.imgur.com/IHLNO.jpg"
      });
      return user;
 };
