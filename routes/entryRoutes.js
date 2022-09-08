@@ -7,12 +7,16 @@ const {
      deleteEntry,
      updateEntry,
      updateLikes,
+     createComment,
+     getComments
 } = require("../controllers/entryControllers");
 
 router.use(protect);
 router.get("/", getEntries);
 router.get("/:id", getSoloEntry);
+router.get("/comment/:id", getComments)
 router.post("/", createEntry);
+router.post("/:id", createComment)
 router.put("/:id", updateEntry);
 router.delete("/:id", deleteEntry);
 router.put("/:id/likes", updateLikes);
