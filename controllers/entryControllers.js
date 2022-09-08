@@ -1,4 +1,5 @@
 const Entry = require("../models/entryModel");
+const Comment = require("../models/commentModel")
 
 const getEntries = async (req, res) => {
      try {
@@ -30,13 +31,43 @@ const createEntry = async (req, res) => {
                start: req.body.start,
                end: req.body.end,
                text: req.body.text,
-               user_username: req.user.username,
+               user_id: req.user._id,
+               user_username: req.user.username
           });
           res.status(200).json(entry);
      } catch (error) {
           res.status(400).json({ error: error.message });
      }
 };
+
+const createComment = async (req,res) => {
+     try {
+          const comment = await Comment.create({
+               text: req.body.text,
+               user_id: req.user._id,
+               user_username: req.user.username,
+               post_id: req.body.postId
+          });
+          // console.log(req.body)
+          res.status(200).json(comment);
+     } catch (error) {
+          res.status(400).json({ error: error.message });
+     }
+}
+
+const getComments = async (req, res) => {
+     try {
+          //filter entries by user that posted (for like profile maybe)
+          // const entry = await Entry.find({ user_username: req.user.username });
+          //gets all entries with creator attached
+          const comment = await Comment.find({post_id: req.params.id}).sort({ createdAt: -1 });
+          res.status(200).json(comment);
+     } catch (error) {
+          res.status(400).json({ error: error.message });
+     }
+};
+
+
 const updateEntry = async (req, res) => {
      try {
           const entry = await Entry.findById(req.params.id);
@@ -74,11 +105,11 @@ const updateLikes = async (req, res) => {
                throw Error("Entry not found");
           }
           const updatedEntry = await Entry.findByIdAndUpdate(req.params.id, {
-               $push: { likes: req.user.username },
+               $push: { likes: req.user._id },
           });
-          if (updatedEntry.likes.includes(req.user.username)) {
+          if (updatedEntry.likes.includes(req.user._id)) {
                await Entry.findByIdAndUpdate(req.params.id, {
-                    $pull: { likes: req.user.username },
+                    $pull: { likes: req.user._id },
                });
           }
 
@@ -95,4 +126,6 @@ module.exports = {
      deleteEntry,
      updateEntry,
      updateLikes,
+     createComment,
+     getComments
 };
