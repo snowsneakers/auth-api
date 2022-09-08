@@ -17,6 +17,7 @@ const signupUser = async (req, res) => {
           interior,
           fsd,
           location,
+          profilePicture
      } = req.body;
      try {
           const user = await User.signup(
@@ -28,10 +29,11 @@ const signupUser = async (req, res) => {
                wheels,
                interior,
                fsd,
-               location
+               location,
+               profilePicture
           );
-          // const token = generateToken(user._id);
-          const token = generateToken(user.username);
+          const token = generateToken(user._id);
+          // const token = generateToken(user.username);
           res.status(201).json({ user, token });
      } catch (error) {
           res.status(400).json({ error: error.message });
@@ -42,8 +44,8 @@ const loginUser = async (req, res) => {
      const { username, password } = req.body;
      try {
           const user = await User.login(username, password);
-          // const token = generateToken(user._id);
-          const token = generateToken(user.username);
+          const token = generateToken(user._id);
+          // const token = generateToken(user.username);
           res.status(200).json({ user, token });
      } catch (error) {
           res.status(400).json({ error: error.message });
