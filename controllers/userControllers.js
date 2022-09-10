@@ -1,5 +1,6 @@
 const User = require("../models/userModel");
 const jwt = require("jsonwebtoken");
+const cloudinary = require("../middleware/cloudinary")
 
 const generateToken = (_id) => {
      // return jwt.sign({ _id }, process.env.SECRET, { expiresIn: "3d" });
@@ -65,25 +66,42 @@ const getProfile = async (req, res) => {
      }
 };
 
-const updatePic = async (req, res) => {
+const updateAvatar = async (req, res) => {
      try {
-          const user = await User.findOne({ username: req.user.username });
+          const result = await cloudinary.uploader.upload(req.body.image, {
+            upload_preset: 'tesla_avatar',
+            public_id: `${req.user._id}avatar`,
+            allowed_formats: ['png', 'jpg', 'jpeg', 'svg', 'ico']
+          }, function(error, result) {if(error){console.log(error)}console.log(result)})
+          const user = await User.findById({_id: req.user.id})
+          if(!user){
+               throw Error("User not found")
+          }
+
+          const updateUser = await user.updateOne({profilePicture: result.secure_url})
+          res.status(200).json(result.secure_url)
+        } catch (error) {
+          res.status(400).json({error: error})
+        }
+};
+
+const getUserByPostId = async (req,res) => {
+     try {
+          const user = await User.findOne({ _id: req.params.postId }).select("-password");
           if (!user) {
+               res.status(400);
                throw Error("User not found");
           }
-          updatedUser = await User.findByIdAndUpdate(
-               { username: req.user.username },
-               { profilePic: req.body.profilePic }
-          );
           res.status(200).json(user);
      } catch (error) {
           res.status(400).json({ error: error.message });
      }
-};
+}
 
 module.exports = {
      loginUser,
      signupUser,
      getProfile,
-     updatePic,
+     updateAvatar,
+     getUserByPostId
 };
