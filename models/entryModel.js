@@ -8,7 +8,8 @@ const entrySchema = new mongoose.Schema(
           likes: { type: Array, requried: true, default: [] },
           liked: { type: Boolean, required: true, default: false },
           user_id: { type: String, requried: true },
-          user_username: {type: String, required: true}
+          user_username: {type: String, required: true},
+          user_profilePicture: {type: String, required: true}
      },
      { timestamps: true }
 );
