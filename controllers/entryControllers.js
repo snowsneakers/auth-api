@@ -32,7 +32,8 @@ const createEntry = async (req, res) => {
                end: req.body.end,
                text: req.body.text,
                user_id: req.user._id,
-               user_username: req.user.username
+               user_username: req.user.username,
+               user_profilePicture: req.user.profilePicture
           });
           res.status(200).json(entry);
      } catch (error) {
@@ -119,6 +120,21 @@ const updateLikes = async (req, res) => {
      }
 };
 
+const updatePostPicture = async (req,res) => {
+     try {
+          
+          const entry = await Entry.findById({user_id: req.user.id})
+          if(!entry){
+               throw Error("User not found")
+          }
+
+          const updateEntry = await entry.updateOne({profilePicture: req.user.profilePicture})
+          res.status(200).json(result.secure_url)
+        } catch (error) {
+          res.status(400).json({error: error})
+        }
+}
+
 module.exports = {
      getEntries,
      getSoloEntry,
@@ -127,5 +143,6 @@ module.exports = {
      updateEntry,
      updateLikes,
      createComment,
-     getComments
+     getComments,
+     updatePostPicture
 };
