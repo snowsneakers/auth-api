@@ -8,7 +8,8 @@ const {
      updateEntry,
      updateLikes,
      createComment,
-     getComments
+     getComments,
+     updatePostPicture
 } = require("../controllers/entryControllers");
 
 router.use(protect);
@@ -20,5 +21,7 @@ router.post("/:id", createComment)
 router.put("/:id", updateEntry);
 router.delete("/:id", deleteEntry);
 router.put("/:id/likes", updateLikes);
+router.put("/:id/avatar", updatePostPicture);
+
 
 module.exports = router;
