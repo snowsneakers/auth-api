@@ -4,7 +4,8 @@ const {
      signupUser,
      getProfile,
      updateAvatar,
-     getUserByPostId
+     getUserByPostId,
+     followUser
 } = require("../controllers/userControllers");
 const protect = require("../middleware/protect");
 
@@ -14,5 +15,6 @@ router.post("/signup", signupUser);
 router.get("/profile/:username", getProfile);
 router.get("/:postId", getUserByPostId)
 router.put("/updateAvatar", protect, updateAvatar)
+router.put("/:id/follow", followUser)
 
 module.exports = router;
