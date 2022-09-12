@@ -98,10 +98,36 @@ const getUserByPostId = async (req,res) => {
      }
 }
 
+const followUser = async (req, res) => {
+     if(req.body.loggedUserId !== req.body.profileUser){
+          try {
+               const user = await User.findById(req.body.profileUser)
+               const loggedUser = await User.findById(req.body.loggedUserId)
+               console.log(loggedUser)
+               if(!user.followers.includes(req.body.loggedUserId)){
+                    await user.updateOne({$push:{followers: req.body.loggedUserId}})
+                    await loggedUser.updateOne({$push: {followings: req.body.profileUser}})
+                    res.status(200).json({message: "Followed user"})
+               } else if (user.followers.includes(req.body.loggedUserId)){
+                    await user.updateOne({$pull:{followers: req.body.loggedUserId}})
+                    await loggedUser.updateOne({$pull: {followings: req.body.profileUser}})
+                    res.status(200).json({message: "Unfollowed user"})
+               } else {
+                    res.status(403).json({message: "user already followed"})
+               }
+          } catch (error) {
+               res.status(500).json({error: error.message})
+          }
+     } else {
+          res.status(403).json({message: "cannot follow yourself"})
+     }
+}
+
 module.exports = {
      loginUser,
      signupUser,
      getProfile,
      updateAvatar,
-     getUserByPostId
+     getUserByPostId,
+     followUser
 };
