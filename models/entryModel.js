@@ -6,7 +6,7 @@ const entrySchema = new mongoose.Schema(
           image: { type: String, required: true },
           category: { type: String, required: true },
           summary: { type: String, requried: true },
-          body: { type: String, required: true },
+          body: { type: Array, required: true, default: [] },
      },
      { timestamps: true }
 );
