@@ -5,36 +5,16 @@ const bcrypt = require("bcrypt");
 const userSchema = new mongoose.Schema(
      {
           username: { type: String, required: true, unique: true },
-          password: { type: String, required: true },
-          profilePicture: { type: String, default: "" },
-          bannerPicture: { type: String, default: "" },
-          followers: { type: Array, default: [] },
-          followings: { type: Array, default: [] },
-          aboutMe: { type: String, max: 50 },
-          orderDate: { type: String, required: true },
-          trim: { type: String, required: true },
-          exterior: { type: String, required: true },
-          wheels: { type: String, required: true },
-          interior: { type: String, required: true },
-          fsd: { type: String, required: true },
-          location: { type: String, default: "N/A" },
+          password: { type: String, required: true }
      },
      { timestamps: true }
 );
 
 userSchema.statics.signup = async function (
      username,
-     password,
-     orderDate,
-     trim,
-     exterior,
-     wheels,
-     interior,
-     fsd,
-     location,
-     profilePicture
+     password
 ) {
-     if (!username || !password || !orderDate) {
+     if (!username || !password) {
           throw Error("All fields must be filled");
      }
 
@@ -52,14 +32,6 @@ userSchema.statics.signup = async function (
      const user = this.create({
           username,
           password: hash,
-          orderDate,
-          trim,
-          exterior,
-          wheels,
-          interior,
-          fsd,
-          location,
-          profilePicture: "https://i.stack.imgur.com/IHLNO.jpg"
      });
      return user;
 };
