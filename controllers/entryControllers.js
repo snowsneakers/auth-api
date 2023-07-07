@@ -25,6 +25,18 @@ const getSoloEntry = async (req, res) => {
           res.status(400).json({ error: error.message });
      }
 };
+const getEntryByCategory = async (req, res) => {
+     try {
+          const entry = await Entry.find({category: req.params.id});
+          if (!entry) {
+               res.status(404);
+               throw Error("Entry not found");
+          }
+          res.status(200).json(entry);
+     } catch (error) {
+          res.status(400).json({ error: error.message });
+     }
+};
 const createEntry = async (req, res) => {
      try {
           const entry = await Entry.create({
@@ -32,7 +44,7 @@ const createEntry = async (req, res) => {
                image: req.body.image,
                category: req.body.category,
                summary: req.body.summary,
-               body: req.body.body
+               body: req.body.body.split("*break*")
           });
           res.status(200).json(entry);
      } catch (error) {
@@ -52,9 +64,9 @@ const updateEntry = async (req, res) => {
                image: req.body.image,
                category: req.body.category,
                summary: req.body.summary,
-               body: req.body.body
-          });
-          res.status(200).json({ message: `updated ${req.params.id}` });
+               body: req.body.body.split("*break*")
+          }, {new: true});
+          res.status(200).json(updatedEntry);
      } catch (error) {
           res.status(400).json({ error: error.message });
      }
@@ -79,5 +91,6 @@ module.exports = {
      getSoloEntry,
      createEntry,
      deleteEntry,
-     updateEntry
+     updateEntry,
+     getEntryByCategory
 };
